@@ -1,0 +1,27 @@
+<ul>
+            <li
+                *ngFor="let friend of friends"
+                [class.selected]="( editForm.id === friend.id )">
+                {{ friend.name }} &mdash;
+                <a (click)="editFriend( friend )">Edit</a> or
+                <a (click)="deleteFriend( friend )">Delete</a>
+                <div *ngIf="( editForm.id === friend.id )" class="form">
+                    <input
+                        type="text"
+                        [value]="editForm.name"
+                        (input)="editForm.name = $event.target.value"
+                        (keydown.Enter)="processEditForm()"
+                    />
+                    <button type="button" (click)="processEditForm()">Update Friend</button>
+                </div>
+            </li>
+        </ul>
+        <div class="form">
+            <input
+                type="text"
+                [value]="addForm.name"
+                (input)="addForm.name = $event.target.value"
+                (keydown.Enter)="processAddForm()"
+            />
+            <button type="button" (click)="processAddForm()">Add Friend</button>
+        </div>
