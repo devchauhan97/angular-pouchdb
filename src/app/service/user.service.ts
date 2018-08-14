@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as PouchDB from "pouchdb";
+import  PouchDB from "pouchdb";
 
 import {IFriend,IPouchDBPutResult,IPouchDBGetFriendResult,
 		IPouchDBRemoveResult,
