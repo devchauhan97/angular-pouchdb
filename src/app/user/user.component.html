@@ -1,30 +1,38 @@
-<ul>
-<li
-    *ngFor="let friend of friends"
-    [class.selected]="( editForm.id === friend.id )">
-    {{ friend.name }} &mdash;
-    <a (click)="editFriend( friend )">Edit</a> or
-    <a (click)="deleteFriend( friend )">Delete</a>
-    <div *ngIf="( editForm.id === friend.id )" class="form">
-        <input
-            type="text"
-            [value]="editForm.name"
-            (input)="editForm.name = $event.target.value"
-            (keydown.Enter)="processEditForm()"
-        />
-        <button type="button" (click)="processEditForm()">Update Friend</button>
+<div class="container">
+    <div class="form-group">
+        <label for="email">Username:</label>
+        <input type="text" class="form-control" [(ngModel)]="form.username" />
     </div>
-</li>
-</ul>
-<div class="form">
-<input
-    type="text"
-    [value]="addForm.name"
-    (input)="addForm.name = $event.target.value"
-    (keydown.Enter)="processAddForm()"
-/>
-<button type="button" (click)="processAddForm()">Add Friend</button>
-</div>
-<div>dddd
-{{element}}
+    <div class="form-group">
+        <label for="email">First Name:</label>
+        <input type="text" class="form-control" [(ngModel)]="form.firstname" />
+    </div>
+    <div class="form-group">
+        <label for="email">Last name:</label>
+        <input type="text" class="form-control" [(ngModel)]="form.lastname" />
+    </div>
+
+    <div class="form-group">
+
+    <button  class="btn btn-success" (click)="insert()">Create</button>
+
+    </div>
+
+    <div class="center">
+        <table class="table table-striped" >
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let person of people">
+                    <td>{{ person.firstname }}</td>
+                    <td>{{ person.lastname }} </td>
+                   <td> <button  class="btn btn-danger" (click)="delete( person._id)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

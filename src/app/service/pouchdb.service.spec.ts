@@ -1,11 +1,11 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { PouchdbService } from './pouchdb.service';
+import { PouchDBService } from './pouchdb.service';
 
-describe('PouchdbService', () => {
+describe('PouchDBService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PouchdbService]
+      providers: [PouchDBService]
     });
   });
 
