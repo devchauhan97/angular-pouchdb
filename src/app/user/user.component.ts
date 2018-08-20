@@ -14,7 +14,7 @@ export class UserComponent implements OnInit {
   	public people: Array<any>;
     public form: any;
 
-    public constructor(private pouchdbservice: PouchDBService, private zone: NgZone) {
+    public constructor(private database: PouchDBService, private zone: NgZone) {
         this.people = [];
         this.form = {
             "username": "",
@@ -24,27 +24,63 @@ export class UserComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.pouchdbservice.sync("http://192.168.1.49:9000/nraboy");
-        this.pouchdbservice.getChangeListener().subscribe(data => {
+
+        this.database.sync("http://192.168.1.49:9000/nraboy");
+
+        this.database.getChangeListener().subscribe(data => {
+            
             for(let i = 0; i < data.change.docs.length; i++) {
-                this.zone.run(() => {
-                    this.people.push(data.change.docs[i]);
-                });
+
+                console.log('live subscribe',data)
+                if(data.change.docs[i]._deleted)
+                {
+                    console.log('live deleted',data.change.docs[i]._id)
+                    this.people.splice(data.change.docs[i]._id);
+                    
+                }else
+                {
+                    this.zone.run(() => {
+                        this.people[data.change.docs[i]._id]=data.change.docs[i];
+                    });
+                }
             }
         });
-        this.pouchdbservice.fetch().then(result => {
-            this.people = [];
-            for(let i = 0; i < result.rows.length; i++) {
-                this.people.push(result.rows[i].doc);
+
+        this.database.getLocalChangeListener().subscribe(data => {
+            
+            console.log('local subscribe',data)
+            if(data.doc._deleted)
+            {
+                console.log('local deleted',data.doc._id)
+                this.people.splice(data.doc._id,1); 
+                
+            }else
+            {
+                this.zone.run(() => {
+                    this.people[data.doc._id]=data.doc;
+                });
             }
+            //this.getall()
+        });
+        this.getall()
+    }
+    public getall(){
+
+         this.database.fetch().then(result => {
+            this.people = [[]];
+            for(let i = 0; i < result.rows.length; i++) {
+
+                this.people[result.rows[i].doc._id]=result.rows[i].doc;
+
+            }
+             console.log('people',this.people)
         }, error => {
             console.error(error);
         });
     }
-
     public insert() {
         if(this.form.username && this.form.firstname && this.form.lastname) {
-            this.pouchdbservice.put(this.form.username, this.form);
+            this.database.put(this.form.username, this.form);
             this.form = {
                 "username": "",
                 "firstname": "",
@@ -56,8 +92,9 @@ export class UserComponent implements OnInit {
     public delete(id) {
 
         if(id) {
-            this.pouchdbservice.delete(id);
-            
+           let res= this.database.delete(id);
+           // console.log(res)
+           // this.getResult();
         }
     }
 }
