@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="form-group">
+        <label for="email">Book Name:</label>
+        <input type="text" class="form-control" [(ngModel)]="form.bookname" />
+    </div>
+    <div class="form-group">
+        <label for="email">Price:</label>
+        <input type="text" class="form-control" [(ngModel)]="form.price" />
+    </div>
+    
+
+    <div class="form-group">
+        <button  class="btn btn-success" (click)="insert()">Create</button>
+    </div>
+    <div class="center">
+        <table class="table table-striped" >
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let person of books | paginate: { itemsPerPage: 5, currentPage: p  }">
+                    <td>{{ person.bookname }} </td>
+                    <td>{{ person.price }}</td>
+                   <td> <button  class="btn btn-danger" (click)="delete( person._id)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+ 
+<pagination-controls  (pageChange)="p = $event"></pagination-controls>

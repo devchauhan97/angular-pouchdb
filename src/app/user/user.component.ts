@@ -1,4 +1,4 @@
-import { Component, OnInit,NgZone } from '@angular/core';
+import { Component, OnInit,NgZone,Output,EventEmitter } from '@angular/core';
 import { UserService } from '../service/user.service';
 import { IAddForm ,IEditForm,IFriend} from '../service/user.model';
 import { ISyncResult } from "../service/pouchdb.model";
@@ -13,9 +13,14 @@ export class UserComponent implements OnInit {
 
   	public people: Array<any>;
     public form: any;
+    public page: any;
+     
+    @Output() pageChange: EventEmitter<number> = new EventEmitter();
+    total_rows: number ;
 
     public constructor(private database: PouchDBService, private zone: NgZone) {
         this.people = [];
+        this.page = 0;
         this.form = {
             "username": "",
             "firstname": "",
@@ -35,10 +40,13 @@ export class UserComponent implements OnInit {
                 if(data.change.docs[i]._deleted)
                 {
                     console.log('live deleted',data.change.docs[i]._id)
-                    this.people.splice(data.change.docs[i]._id);
                     
-                }else
+                    //this.deleteHtml(data.change.docs[i]._id)  
+                    this.getall(this.page)
+                }
+                else
                 {
+                    console.log('live create',data.doc._id)
                     this.zone.run(() => {
                         this.people[data.change.docs[i]._id]=data.change.docs[i];
                     });
@@ -52,32 +60,42 @@ export class UserComponent implements OnInit {
             if(data.doc._deleted)
             {
                 console.log('local deleted',data.doc._id)
-                this.people.splice(data.doc._id,1); 
-                
-            }else
+                //this.deleteHtml(data.doc._id) 
+                this.getall(this.page)
+            }
+            else
             {
+                console.log('local create',data.doc._id)
                 this.zone.run(() => {
-                    this.people[data.doc._id]=data.doc;
+                    this.people.push(data.doc);
                 });
             }
             //this.getall()
         });
-        this.getall()
+        this.getall(this.page);
     }
-    public getall(){
+    public getall(offset:string){
 
-         this.database.fetch().then(result => {
-            this.people = [[]];
+         this.database.fetch(offset).then(result => {
+
+            this.people = [];
+            
+            console.clear();
+            console.log('result',result)
+
+            this.total_rows=Math.ceil(result.total_rows/5);
+
             for(let i = 0; i < result.rows.length; i++) {
 
-                this.people[result.rows[i].doc._id]=result.rows[i].doc;
+                this.people.push(result.rows[i].doc);
 
             }
-             console.log('people',this.people)
+            console.log('people',this.people)
         }, error => {
             console.error(error);
         });
     }
+
     public insert() {
         if(this.form.username && this.form.firstname && this.form.lastname) {
             this.database.put(this.form.username, this.form);
@@ -96,5 +114,15 @@ export class UserComponent implements OnInit {
            // console.log(res)
            // this.getResult();
         }
+    }
+    public deleteHtml(id) 
+    {
+        console.log('before delete',this.people)
+        const result =  this.people.find( _db => _db._id === id);
+
+        console.log(result,'after delete',this.people)
+    }
+    public pageChanged(event){
+       console.log(event)  
     }
 }

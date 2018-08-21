@@ -4,7 +4,7 @@ import  PouchDB from "pouchdb";
 @Injectable({
   providedIn: 'root'
 })
-export class PouchDBService {
+export class BookService {
 
     private isInstantiated: boolean;
     private database: any;
@@ -15,7 +15,7 @@ export class PouchDBService {
 
     public constructor() {
         if(!this.isInstantiated) {
-            this.database = new PouchDB("nraboy");
+            this.database = new PouchDB("books");
             this.isInstantiated = true;
         }
 
@@ -24,16 +24,8 @@ export class PouchDBService {
             since: 'now',
             live: true,
         }).on("change", change => { 
-
             console.log('local change',change)
-            if (change.deleted) 
-            {
-              this.localListener.emit(change);
-            } 
-            else 
-            {  
-                this.localListener.emit(change);
-            }
+            this.localListener.emit(change);
         }).on('error', error => {
             console.error(JSON.stringify(error));
         });
@@ -70,7 +62,7 @@ export class PouchDBService {
     public sync(remote: string) {
 
         let remoteDatabase = new PouchDB(remote);
-           console.log('remoteDatabase',remoteDatabase)
+           
         this.database.sync(remoteDatabase, {
             live: true,
             retry: true 
@@ -88,14 +80,11 @@ export class PouchDBService {
                   this.listener.emit(change);
                 }
             } 
-            else 
-            {  
-
-            }
             
         }).on('paused', (err) =>{
           console.log('paused');
-          if (err) {
+          if (err) 
+          {
             alert(`No connection! ${err}`);
           }
           // replication was paused, usually because of a lost connection
@@ -105,15 +94,15 @@ export class PouchDBService {
         }).on('error', error => {
              
             console.log('error');
-            //console.error(JSON.stringify(error));
+            console.error(JSON.stringify(error));
         }) 
     }
 
-    public getChangeListener() {
+    public getLiveBookChangeListener() {
         return this.listener;
     }
 
-    public getLocalChangeListener() {
+    public getLocalBookChangeListener() {
         return this.localListener;
     }
 
