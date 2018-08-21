@@ -30,7 +30,7 @@ export class BookComponent implements OnInit {
 
     public ngOnInit() {
 
-        this.bookdatabase.sync("http://192.168.1.49:9000/books");
+        this.bookdatabase.sync("http://192.168.1.109:9000/books");
 
         this.bookdatabase.getLiveBookChangeListener().subscribe(data => {
             console.log('live listiner',data)
@@ -52,19 +52,18 @@ export class BookComponent implements OnInit {
 
     public getall(offset:string){
 
-         this.bookdatabase.fetch(offset).then(result => {
-
-            this.books = [];
-            
-            console.log('result',result)
-
-            //this.total_rows=Math.ceil(result.total_rows/5);
-
+        this.zone.run(() => {
+            this.books=[];
+        })
+        this.bookdatabase.fetch(offset).then(result => {
+           //this.books = [];
             for(let i = 0; i < result.rows.length; i++) {
-
-                this.books.push(result.rows[i].doc);
+                this.zone.run(() => {
+                    this.books.push(result.rows[i].doc);
+                })
 
             }
+           // if(result.rows.length == 0)
             console.log('books',this.books)
         }, error => {
             console.error(error);
@@ -73,7 +72,7 @@ export class BookComponent implements OnInit {
 
     public insert() {
         if(this.form.bookname && this.form.price) {
-            this.bookdatabase.put(this.form.bookname, this.form);
+            this.bookdatabase.put(this.form.id, this.form);
             this.form = {
                 "bookname": "",
                 "price": "",
@@ -83,18 +82,24 @@ export class BookComponent implements OnInit {
 
     public delete(id) {
 
-        if(id) {
+        if(id) 
+        {
            let res= this.bookdatabase.delete(id);
-           // console.log(res)
-           // this.getResult();
+           
         }
     }
-    public deleteHtml(id) 
+    public update(id) 
     {
-        console.log('before delete',this.books)
-        const result =  this.books.find( _db => _db._id === id);
-
-        console.log(result,'after delete',this.books)
+        //const result =  this.books.find( _db => _db._id === id);
+        let res= this.bookdatabase.get(id).then(result => {
+            this.form = {
+                    "bookname": result.bookname,
+                    "price": result.price,
+                    "id": result._id,
+                }
+        });
+        //console.log('before delete',res)
+        console.log('after delete',this.form)
     }
     public pageChanged(event){
        console.log(event)  

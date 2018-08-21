@@ -1,4 +1,6 @@
 <div class="container">
+    <input type="hidden" class="form-control" [(ngModel)]="form.id" />
+    {{form.id}}
     <div class="form-group">
         <label for="email">Book Name:</label>
         <input type="text" class="form-control" [(ngModel)]="form.bookname" />
@@ -25,10 +27,12 @@
                     <td>{{ person.bookname }} </td>
                     <td>{{ person.price }}</td>
                    <td> <button  class="btn btn-danger" (click)="delete( person._id)">Delete</button></td>
+                   <td> <button  class="btn btn-success" (click)="update( person._id)">Update</button></td>
+
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
- 
+ {{ books | json }}
 <!--| paginate: { itemsPerPage: 5, currentPage: p  } <pagination-controls  (pageChange)="p = $event"></pagination-controls> -->

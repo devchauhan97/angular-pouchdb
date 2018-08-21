@@ -42,10 +42,11 @@ export class BookService {
     }
 
     public put(id: string, document: any) {
-
+        console.log('document',document)
         document._id = ( "u:" + ( new Date() ).getTime() );
+
         return this.get(id).then(result => {
-            document._rev = result._rev;
+           document._rev = result._rev;
             return this.database.put(document);
         }, error => {
             console.log('error',error);
