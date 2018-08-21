@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let person of books | paginate: { itemsPerPage: 5, currentPage: p  }">
+                <tr *ngFor="let person of books ">
                     <td>{{ person.bookname }} </td>
                     <td>{{ person.price }}</td>
                    <td> <button  class="btn btn-danger" (click)="delete( person._id)">Delete</button></td>
@@ -31,4 +31,4 @@
     </div>
 </div>
  
-<pagination-controls  (pageChange)="p = $event"></pagination-controls>
+<!--| paginate: { itemsPerPage: 5, currentPage: p  } <pagination-controls  (pageChange)="p = $event"></pagination-controls> -->

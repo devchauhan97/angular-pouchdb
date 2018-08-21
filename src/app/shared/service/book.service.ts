@@ -27,7 +27,7 @@ export class BookService {
             console.log('local change',change)
             this.localListener.emit(change);
         }).on('error', error => {
-            console.error(JSON.stringify(error));
+            console.error('local error',error);
         });
 
     }
@@ -93,8 +93,8 @@ export class BookService {
           // replication was resumed
         }).on('error', error => {
              
-            console.log('error');
-            console.error(JSON.stringify(error));
+            console.error('live error',error);
+            //console.error(JSON.stringify(error));
         }) 
     }
 

@@ -33,7 +33,7 @@ export class BookComponent implements OnInit {
         this.bookdatabase.sync("http://192.168.1.49:9000/books");
 
         this.bookdatabase.getLiveBookChangeListener().subscribe(data => {
-            
+            console.log('live listiner',data)
             for(let i = 0; i < data.change.docs.length; i++) 
             {
                 console.log('live subscribe',data)
@@ -77,7 +77,6 @@ export class BookComponent implements OnInit {
             this.form = {
                 "bookname": "",
                 "price": "",
-                
             }
         }
     }
