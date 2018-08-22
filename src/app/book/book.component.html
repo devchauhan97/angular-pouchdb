@@ -1,6 +1,6 @@
 <div class="container">
     <input type="hidden" class="form-control" [(ngModel)]="form.id" />
-    {{form.id}}
+    
     <div class="form-group">
         <label for="email">Book Name:</label>
         <input type="text" class="form-control" [(ngModel)]="form.bookname" />
@@ -11,7 +11,7 @@
     </div>
 
     <div class="form-group">
-        <button  class="btn btn-success" (click)="insert()">Create</button>
+        <button  class="btn btn-success" (click)="insert()">{{form.id ? 'Update':'Create'}}</button>
     </div>
     <div class="center">
         <table class="table table-striped" >
