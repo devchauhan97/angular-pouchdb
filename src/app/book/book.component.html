@@ -9,7 +9,6 @@
         <label for="email">Price:</label>
         <input type="text" class="form-control" [(ngModel)]="form.price" />
     </div>
-    
 
     <div class="form-group">
         <button  class="btn btn-success" (click)="insert()">Create</button>
@@ -23,16 +22,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let person of books ">
+                <tr *ngFor="let person of books | paginate: { itemsPerPage: 5, currentPage: p  } ">
                     <td>{{ person.bookname }} </td>
                     <td>{{ person.price }}</td>
                    <td> <button  class="btn btn-danger" (click)="delete( person._id)">Delete</button></td>
-                   <td> <button  class="btn btn-success" (click)="update( person._id)">Update</button></td>
+                   <td> <button  class="btn btn-success" (click)="update( person._id)">Edit</button></td>
 
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
- {{ books | json }}
-<!--| paginate: { itemsPerPage: 5, currentPage: p  } <pagination-controls  (pageChange)="p = $event"></pagination-controls> -->
+ 
+<pagination-controls  (pageChange)="p = $event"></pagination-controls> 

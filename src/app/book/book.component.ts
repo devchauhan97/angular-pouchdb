@@ -30,7 +30,7 @@ export class BookComponent implements OnInit {
 
     public ngOnInit() {
 
-        this.bookdatabase.sync("http://192.168.1.109:9000/books");
+        this.bookdatabase.sync("http://192.168.1.49:9000/books");
 
         this.bookdatabase.getLiveBookChangeListener().subscribe(data => {
             console.log('live listiner',data)
@@ -90,16 +90,15 @@ export class BookComponent implements OnInit {
     }
     public update(id) 
     {
-        //const result =  this.books.find( _db => _db._id === id);
         let res= this.bookdatabase.get(id).then(result => {
+        	console.log('result',result)
             this.form = {
                     "bookname": result.bookname,
                     "price": result.price,
                     "id": result._id,
                 }
         });
-        //console.log('before delete',res)
-        console.log('after delete',this.form)
+         
     }
     public pageChanged(event){
        console.log(event)  

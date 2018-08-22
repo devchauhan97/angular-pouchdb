@@ -42,22 +42,35 @@ export class BookService {
     }
 
     public put(id: string, document: any) {
-        console.log('document',document)
-        document._id = ( "u:" + ( new Date() ).getTime() );
-
-        return this.get(id).then(result => {
-           document._rev = result._rev;
-            return this.database.put(document);
+        if(id)
+        {
+        	return this.get(id).then(result => {
+	            document._rev = result._rev;
+	            document._id=id
+	        	console.log('document',document)
+	           return this.database.put(document);
+	        })
+        }
+        else
+        {
+        	document._id = ( "u:" + ( new Date() ).getTime() );
+         	return this.database.put(document);
+        }
+       /* return this.get(id).then(result => {
+            document._rev = result._rev;
+	        document._id=id
+           return this.database.put(document);
         }, error => {
-            console.log('error',error);
+            console.error('error',error);
             if(error.status == "404") {
+            	document._id = ( "u:" + ( new Date() ).getTime() );
                 return this.database.put(document);
             } else {
                 return new Promise((resolve, reject) => {
                     reject(error);
                 });
             }
-        });
+        });*/
     }
 
     public sync(remote: string) {
